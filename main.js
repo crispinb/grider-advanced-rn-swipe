@@ -26,12 +26,12 @@ class App extends React.Component {
         image={{ uri: item.uri }}
       >
         <Text style={{ marginBottom: 10 }}>
-          Customiserissimo
+          This is text. Believe it.
         </Text>
         <Button
           icon = {{name:'code'}}
           backgroundColor="#03A9F4"
-          title = "View Now or never!"
+          title = "View if ya wish"
           />
       </Card>
     )
