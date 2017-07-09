@@ -35,18 +35,26 @@ class Deck extends Component {
 
   render() {
     return (
-      // We will eventually be wiring the panResponder to individual
-      // cards.
-      <Animated.View
-        style={this.position.getLayout()}
-        {...this.panResponder.panHandlers}>
+      <Animated.View>
         {this.renderCards()}
       </Animated.View>
     );
   }
 
   renderCards() {
-    return this.props.data.map(item => {
+    return this.props.data.map((item, index) => {
+      // temporarily limiting animation to the first visible card
+      if (index === 0) {
+        return (
+          <Animated.View
+            key={item.id}
+            {...this.panResponder.panHandlers}
+            style={this.position.getLayout()}
+          >
+            {this.props.renderCard(item)}
+          </Animated.View>
+        )
+      }
       return this.props.renderCard(item);
     })
   }
