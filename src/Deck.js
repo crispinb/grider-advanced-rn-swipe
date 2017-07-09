@@ -1,24 +1,33 @@
 //  Crispin Bennett ${Date}import React from 'react';
 import React, { Component } from 'react';
 import {
-  View, Animated,
+  View,
+  Animated,
   PanResponder
 } from 'react-native';
 
 class Deck extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
+    const position = new Animated.ValueXY();
     const panResponder = PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onPanResponderMove: (event, gesture) => {
-        console.log(gesture);
+        // We're setting the absolute x/y to the gesture's
+        // x/y diffs.
+        // I presume this works because not setting a default in
+        // new Animated.ValueXY() implicitly defines the starting
+        // position as 0,0 ?
+        position.setValue({ x: gesture.dx, y: gesture.dy })
       },
-      onPanResponderRelease: () => {}
+      onPanResponderRelease: () => {
+      }
     });
 
     // Grider puts the panResponder in state to follow convention
     // but this is more parsimonious
     this.panResponder = panResponder;
+    this.position = position;
   }
 
   componentWillMount() {
@@ -26,9 +35,13 @@ class Deck extends Component {
 
   render() {
     return (
-      <View>
+      // We will eventually be wiring the panResponder to individual
+      // cards.
+      <Animated.View
+        style={this.position.getLayout()}
+        {...this.panResponder.panHandlers}>
         {this.renderCards()}
-      </View>
+      </Animated.View>
     );
   }
 
