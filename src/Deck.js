@@ -13,6 +13,15 @@ const SWIPE_OUT_DURATION = 250;
 
 
 class Deck extends Component {
+  // https://facebook.github.io/react/docs/react-component.html#defaultprops
+  // an alternative would be https://www.npmjs.com/package/prop-types to type-check
+  // prop types automatically, we may not want these callbacks to be compulsory
+  static defaultProps = {
+    // prevent crashes if the user doesn't supply the callback functions
+    onSwipeRight: () => {},
+    onSwipeLeft: () => {}
+  };
+
   constructor(props) {
     super(props);
     const position = new Animated.ValueXY();
@@ -44,6 +53,8 @@ class Deck extends Component {
     // but this is more parsimonious
     this.panResponder = panResponder;
     this.position = position;
+    // index of the currently swipable item
+    this.state = { index: 0 };
   }
 
   forceSwipe(direction) {
@@ -51,7 +62,24 @@ class Deck extends Component {
     Animated.timing(this.position, {
       toValue: { x, y: 0 },
       duration: SWIPE_OUT_DURATION
-    }).start();
+    }).start(() => this.onSwipeComplete(direction));
+  }
+
+  onSwipeComplete(direction) {
+    const { onSwipeLeft, onSwipeRight, data } = this.props;
+    const item = data[ this.state.index ];
+
+    // SG uses a ternary here. Don't like. Ternaries are for expressions not statements IMO
+    if (direction === 'right') {
+      onSwipeRight(item);
+    } else {
+      onSwipeLeft(item);
+    }
+
+    // position currently has the value of the just-swiped card, so reset it
+    this.position.setValue({ x: 0, y: 0 });
+    // TODO: isn't this going overflow the array bounds?
+    this.setState({ index: this.state.index + 1 });
   }
 
   resetPosition() {
@@ -90,8 +118,7 @@ class Deck extends Component {
   renderCards() {
     return this.props.data.map((item, index) => {
       // temporarily limiting animation to the first visible card
-      if (index === 0
-      ) {
+      if (index === this.state.index) {
         return (
           < Animated.View
             key={item.id
