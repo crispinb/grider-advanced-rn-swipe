@@ -4,7 +4,9 @@ import {
   View,
   Animated,
   PanResponder,
-  Dimensions
+  Dimensions,
+  LayoutAnimation,
+  UIManager
 } from 'react-native';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -59,6 +61,12 @@ class Deck extends Component {
     this.position = position;
     // index of the currently swipable item
     this.state = { index: 0 };
+  }
+
+  componentWillUpdate() {
+    // workaround for android
+    UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true)
+    LayoutAnimation.spring();
   }
 
   forceSwipe(direction) {
@@ -146,7 +154,7 @@ class Deck extends Component {
         // of the image. This can cause the newly-revealed card to flash
         <Animated.View
           key={item.id}
-          style={[styles.cardStyle, { top: 10 * (arrayIndex - this.state.index)}]}>
+          style={[ styles.cardStyle, { top: 10 * (arrayIndex - this.state.index) } ]}>
           {this.props.renderCard(item)}
         </Animated.View>
       )
