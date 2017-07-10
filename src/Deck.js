@@ -141,9 +141,12 @@ class Deck extends Component {
       }
 
       return (
-        <View key={item.id} style={styles.cardStyle}>
+        // This could just be a View. But when it gets to the top of the stack,
+        // the Card gets wrapped by an Animated.View, which forces rerendering
+        // of the image. This can cause the newly-revealed card to flash
+        <Animated.View key={item.id} style={styles.cardStyle}>
           {this.props.renderCard(item)}
-        </View>
+        </Animated.View>
     )
       // render cards with the lowest-indexed on top
     }).reverse()
