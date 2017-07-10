@@ -121,7 +121,6 @@ class Deck extends Component {
   renderCards() {
     if (this.state.index >= this.props.data.length) {
       return this.props.renderNoMoreCards();
-      return;
     }
 
     return this.props.data.map((item, arrayIndex) => {
@@ -134,19 +133,30 @@ class Deck extends Component {
           < Animated.View
             key={item.id}
             {...this.panResponder.panHandlers}
-            style={this.getCardStyle()}
+            style={[this.getCardStyle(), styles.cardStyle]}
           >
             {this.props.renderCard(item)}
           </Animated.View>
         )
       }
 
-      return this.props.renderCard(item);
-    })
+      return (
+        <View key={item.id} style={styles.cardStyle}>
+          {this.props.renderCard(item)}
+        </View>
+    )
+      // render cards with the lowest-indexed on top
+    }).reverse()
   }
 }
 
 
-const styles = {};
+const styles = {
+  cardStyle: {
+    // enable stacking the cards rather than vertically listing
+    position: 'absolute',
+    width:SCREEN_WIDTH
+  }
+};
 
 export default Deck;
