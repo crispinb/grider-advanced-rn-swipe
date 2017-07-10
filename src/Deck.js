@@ -21,6 +21,8 @@ class Deck extends Component {
     onSwipeRight: () => {
     },
     onSwipeLeft: () => {
+    },
+    renderNoMoreCards: () => {
     }
   };
 
@@ -117,6 +119,11 @@ class Deck extends Component {
   }
 
   renderCards() {
+    if (this.state.index >= this.props.data.length) {
+      return this.props.renderNoMoreCards();
+      return;
+    }
+
     return this.props.data.map((item, arrayIndex) => {
       if (arrayIndex < this.state.index) {
         return null;
