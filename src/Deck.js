@@ -63,6 +63,13 @@ class Deck extends Component {
     this.state = { index: 0 };
   }
 
+  componentWillReceiveProps(nextProps){
+    // set display index back to 0 when we get a new data set
+    if (nextProps.data !== this.props.data) {
+      this.setState({ index: 0 });
+    }
+  }
+
   componentWillUpdate() {
     // workaround for android
     UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true)
