@@ -63,7 +63,7 @@ class Deck extends Component {
     this.state = { index: 0 };
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     // set display index back to 0 when we get a new data set
     if (nextProps.data !== this.props.data) {
       this.setState({ index: 0 });
@@ -111,13 +111,10 @@ class Deck extends Component {
 
   render() {
     return (
-      < Animated.View>
-        {this.renderCards()
-        }
-      </
-        Animated.View>
-    )
-      ;
+      <View>
+        {this.renderCards()}
+      </View>
+    );
   }
 
   getCardStyle() {
@@ -145,10 +142,10 @@ class Deck extends Component {
 
       if (arrayIndex === this.state.index) {
         return (
-          < Animated.View
+          <Animated.View
             key={item.id}
             {...this.panResponder.panHandlers}
-            style={[ this.getCardStyle(), styles.cardStyle ]}
+            style={[ this.getCardStyle(), styles.cardStyle, { zIndex: 99 } ]}
           >
             {this.props.renderCard(item)}
           </Animated.View>
@@ -161,7 +158,7 @@ class Deck extends Component {
         // of the image. This can cause the newly-revealed card to flash
         <Animated.View
           key={item.id}
-          style={[ styles.cardStyle, { top: 10 * (arrayIndex - this.state.index) } ]}>
+          style={[ styles.cardStyle, { top: 10 * (arrayIndex - this.state.index), zIndex: 5 } ]}>
           {this.props.renderCard(item)}
         </Animated.View>
       )
