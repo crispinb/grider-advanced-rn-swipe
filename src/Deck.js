@@ -18,8 +18,10 @@ class Deck extends Component {
   // prop types automatically, we may not want these callbacks to be compulsory
   static defaultProps = {
     // prevent crashes if the user doesn't supply the callback functions
-    onSwipeRight: () => {},
-    onSwipeLeft: () => {}
+    onSwipeRight: () => {
+    },
+    onSwipeLeft: () => {
+    }
   };
 
   constructor(props) {
@@ -78,7 +80,6 @@ class Deck extends Component {
 
     // position currently has the value of the just-swiped card, so reset it
     this.position.setValue({ x: 0, y: 0 });
-    // TODO: isn't this going overflow the array bounds?
     this.setState({ index: this.state.index + 1 });
   }
 
@@ -116,26 +117,23 @@ class Deck extends Component {
   }
 
   renderCards() {
-    return this.props.data.map((item, index) => {
-      // temporarily limiting animation to the first visible card
-      if (index === this.state.index) {
+    return this.props.data.map((item, arrayIndex) => {
+      if (arrayIndex < this.state.index) {
+        return null;
+      }
+
+      if (arrayIndex === this.state.index) {
         return (
           < Animated.View
-            key={item.id
-            }
-            {...
-              this.panResponder.panHandlers
-            }
-            style={this.getCardStyle()
-            }
+            key={item.id}
+            {...this.panResponder.panHandlers}
+            style={this.getCardStyle()}
           >
-            {
-              this.props.renderCard(item)
-            }
-          </
-            Animated.View>
+            {this.props.renderCard(item)}
+          </Animated.View>
         )
       }
+
       return this.props.renderCard(item);
     })
   }
