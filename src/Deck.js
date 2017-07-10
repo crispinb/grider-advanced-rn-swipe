@@ -133,7 +133,7 @@ class Deck extends Component {
           < Animated.View
             key={item.id}
             {...this.panResponder.panHandlers}
-            style={[this.getCardStyle(), styles.cardStyle]}
+            style={[ this.getCardStyle(), styles.cardStyle ]}
           >
             {this.props.renderCard(item)}
           </Animated.View>
@@ -144,10 +144,12 @@ class Deck extends Component {
         // This could just be a View. But when it gets to the top of the stack,
         // the Card gets wrapped by an Animated.View, which forces rerendering
         // of the image. This can cause the newly-revealed card to flash
-        <Animated.View key={item.id} style={styles.cardStyle}>
+        <Animated.View
+          key={item.id}
+          style={[styles.cardStyle, { top: 10 * (arrayIndex - this.state.index)}]}>
           {this.props.renderCard(item)}
         </Animated.View>
-    )
+      )
       // render cards with the lowest-indexed on top
     }).reverse()
   }
@@ -158,7 +160,7 @@ const styles = {
   cardStyle: {
     // enable stacking the cards rather than vertically listing
     position: 'absolute',
-    width:SCREEN_WIDTH
+    width: SCREEN_WIDTH
   }
 };
 
